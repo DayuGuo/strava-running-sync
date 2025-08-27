@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Strava Running Sync
- * Plugin URI: https://github.com/your-username/strava-running-sync
+ * Plugin URI: https://github.com/DayuGuo/strava-running-sync
  * Description: 自动同步Strava跑步数据并展示在WordPress网站上
  * Version: 1.0.0
  * Author: Dayu
@@ -107,12 +107,64 @@ class StravaRunningSync {
             wp_enqueue_style('srs-styles', $plugin_url . 'assets/css/frontend.css', [], $version);
             wp_enqueue_script('srs-script', $plugin_url . 'assets/js/frontend.js', ['jquery', 'mapbox-gl'], $version, true);
             
+            // 检测主题颜色并生成自适应样式
+            $theme_colors = $this->detectThemeColors();
+            
             wp_localize_script('srs-script', 'srs_ajax', [
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('srs_ajax_nonce'),
                 'mapbox_token' => get_option('srs_mapbox_token', ''),
-                'map_style' => get_option('srs_map_style', 'mapbox://styles/mapbox/streets-v12')
+                'map_style' => get_option('srs_map_style', 'mapbox://styles/mapbox/streets-v12'),
+                'theme_colors' => $theme_colors
             ]);
+            
+            // 添加内联样式以支持主题适应
+            $this->addAdaptiveInlineStyles($theme_colors);
+        }
+    }
+    
+    private function detectThemeColors() {
+        $colors = [
+            'detected' => false,
+            'background' => '#ffffff',
+            'text' => '#333333',
+            'link' => '#0073aa',
+            'border' => '#dddddd'
+        ];
+        
+        // 尝试从当前主题获取颜色设置
+        if (function_exists('get_theme_mod')) {
+            $bg_color = get_theme_mod('background_color');
+            $text_color = get_theme_mod('text_color');
+            $link_color = get_theme_mod('link_color');
+            
+            if ($bg_color) {
+                $colors['background'] = '#' . $bg_color;
+                $colors['detected'] = true;
+            }
+            if ($text_color) {
+                $colors['text'] = '#' . $text_color;
+                $colors['detected'] = true;
+            }
+            if ($link_color) {
+                $colors['link'] = '#' . $link_color;
+                $colors['detected'] = true;
+            }
+        }
+        
+        return $colors;
+    }
+    
+    private function addAdaptiveInlineStyles($theme_colors) {
+        if ($theme_colors['detected']) {
+            $custom_css = "
+                .srs-container {
+                    --srs-theme-bg: {$theme_colors['background']};
+                    --srs-theme-text: {$theme_colors['text']};
+                    --srs-theme-link: {$theme_colors['link']};
+                }
+            ";
+            wp_add_inline_style('srs-styles', $custom_css);
         }
     }
     

@@ -4,6 +4,68 @@ jQuery(document).ready(function($) {
     let routes = [];
     let currentFilter = 'all';
     
+    // 主题适应功能
+    function detectAndApplyTheme() {
+        const container = $('.srs-container');
+        if (!container.length) return;
+        
+        // 检测主题背景颜色
+        const bodyBg = $('body').css('background-color');
+        const contentBg = $('.site-content, .entry-content, main, article').first().css('background-color');
+        const textColor = $('body, .site-content, main').first().css('color');
+        
+        // 如果检测到非白色背景，应用主题适应类
+        if (bodyBg && bodyBg !== 'rgb(255, 255, 255)' && bodyBg !== 'rgba(255, 255, 255, 1)' && bodyBg !== 'transparent') {
+            container.addClass('theme-adaptive');
+        }
+        
+        // 动态设置CSS变量
+        const computedStyles = {
+            textColor: textColor || 'inherit',
+            linkColor: $('a').first().css('color') || '#0073aa',
+            borderColor: rgba2hex(adjustBrightness(textColor, -0.5)) || '#ddd'
+        };
+        
+        container.css({
+            '--srs-text-color': computedStyles.textColor,
+            '--srs-link-color': computedStyles.linkColor,
+            '--srs-border-color': computedStyles.borderColor,
+            '--srs-border-light-color': adjustOpacity(computedStyles.borderColor, 0.5)
+        });
+    }
+    
+    // 颜色工具函数
+    function rgba2hex(rgb) {
+        if (!rgb || rgb === 'transparent') return null;
+        const match = rgb.match(/\d+/g);
+        if (!match || match.length < 3) return null;
+        return '#' + ((1 << 24) + (parseInt(match[0]) << 16) + (parseInt(match[1]) << 8) + parseInt(match[2])).toString(16).slice(1);
+    }
+    
+    function adjustBrightness(color, amount) {
+        if (!color || color === 'transparent') return null;
+        const match = color.match(/\d+/g);
+        if (!match || match.length < 3) return null;
+        
+        const r = Math.max(0, Math.min(255, parseInt(match[0]) + (amount * 255)));
+        const g = Math.max(0, Math.min(255, parseInt(match[1]) + (amount * 255)));
+        const b = Math.max(0, Math.min(255, parseInt(match[2]) + (amount * 255)));
+        
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+    
+    function adjustOpacity(color, opacity) {
+        if (!color) return null;
+        const hex = color.replace('#', '');
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    }
+    
+    // 应用主题检测
+    detectAndApplyTheme();
+    
     function initMap() {
         const mapElement = document.getElementById('srs-map');
         if (!mapElement) return;
