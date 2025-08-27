@@ -37,6 +37,7 @@ class SRS_Admin {
             update_option('srs_mapbox_token', sanitize_text_field($_POST['mapbox_token']));
             update_option('srs_map_style', sanitize_text_field($_POST['map_style']));
             update_option('srs_auto_sync', isset($_POST['auto_sync']) ? 1 : 0);
+            update_option('srs_color_scheme', sanitize_text_field($_POST['color_scheme']));
             
             echo '<div class="notice notice-success"><p>' . __('设置已保存', 'strava-running-sync') . '</p></div>';
         }
@@ -62,6 +63,7 @@ class SRS_Admin {
         $mapbox_token = get_option('srs_mapbox_token', '');
         $map_style = get_option('srs_map_style', 'mapbox://styles/mapbox/streets-v12');
         $auto_sync = get_option('srs_auto_sync', 0);
+        $color_scheme = get_option('srs_color_scheme', 'auto');
         $last_sync = get_option('srs_last_sync', '');
         
         ?>
@@ -155,6 +157,21 @@ class SRS_Admin {
                                         <option value="mapbox://styles/mapbox/satellite-v9" <?php selected($map_style, 'mapbox://styles/mapbox/satellite-v9'); ?>>Satellite</option>
                                         <option value="mapbox://styles/mapbox/satellite-streets-v12" <?php selected($map_style, 'mapbox://styles/mapbox/satellite-streets-v12'); ?>>Satellite Streets</option>
                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <label for="color_scheme"><?php _e('配色方案', 'strava-running-sync'); ?></label>
+                                </th>
+                                <td>
+                                    <select id="color_scheme" name="color_scheme">
+                                        <option value="auto" <?php selected($color_scheme, 'auto'); ?>><?php _e('自动检测配色', 'strava-running-sync'); ?></option>
+                                        <option value="light" <?php selected($color_scheme, 'light'); ?>><?php _e('浅色配色', 'strava-running-sync'); ?></option>
+                                        <option value="dark" <?php selected($color_scheme, 'dark'); ?>><?php _e('深色配色', 'strava-running-sync'); ?></option>
+                                    </select>
+                                    <p class="description">
+                                        <?php _e('自动检测：根据WordPress主题自动适配颜色；浅色/深色：强制使用指定配色方案', 'strava-running-sync'); ?>
+                                    </p>
                                 </td>
                             </tr>
                             <tr>

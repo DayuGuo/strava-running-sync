@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(php -l:*)",
-      "Bash(php:*)"
+      "Bash(php:*)",
+      "WebFetch(domain:nodaysoff.run)"
     ],
     "deny": [],
     "ask": []

@@ -9,29 +9,48 @@ jQuery(document).ready(function($) {
         const container = $('.srs-container');
         if (!container.length) return;
         
-        // 检测主题背景颜色
-        const bodyBg = $('body').css('background-color');
-        const contentBg = $('.site-content, .entry-content, main, article').first().css('background-color');
-        const textColor = $('body, .site-content, main').first().css('color');
+        // 获取用户设置的配色方案
+        const colorScheme = srs_ajax.color_scheme || 'auto';
         
-        // 如果检测到非白色背景，应用主题适应类
-        if (bodyBg && bodyBg !== 'rgb(255, 255, 255)' && bodyBg !== 'rgba(255, 255, 255, 1)' && bodyBg !== 'transparent') {
-            container.addClass('theme-adaptive');
+        if (colorScheme === 'light') {
+            // 强制浅色模式
+            container.addClass('srs-force-light');
+            container.removeClass('srs-force-dark');
+        } else if (colorScheme === 'dark') {
+            // 强制深色模式
+            container.addClass('srs-force-dark');
+            container.removeClass('srs-force-light');
+        } else {
+            // 自动检测模式
+            container.removeClass('srs-force-light srs-force-dark');
+            
+            // 检测主题背景颜色
+            const bodyBg = $('body').css('background-color');
+            const contentBg = $('.site-content, .entry-content, main, article').first().css('background-color');
+            const textColor = $('body, .site-content, main').first().css('color');
+            
+            // 改进的主题检测逻辑：任何有效的背景颜色都应该被识别
+            if (bodyBg && bodyBg !== 'initial' && bodyBg !== 'inherit' && bodyBg !== '') {
+                container.addClass('theme-adaptive');
+            }
         }
         
-        // 动态设置CSS变量
-        const computedStyles = {
-            textColor: textColor || 'inherit',
-            linkColor: $('a').first().css('color') || '#0073aa',
-            borderColor: rgba2hex(adjustBrightness(textColor, -0.5)) || '#ddd'
-        };
-        
-        container.css({
-            '--srs-text-color': computedStyles.textColor,
-            '--srs-link-color': computedStyles.linkColor,
-            '--srs-border-color': computedStyles.borderColor,
-            '--srs-border-light-color': adjustOpacity(computedStyles.borderColor, 0.5)
-        });
+        // 动态设置CSS变量（仅在自动模式下）
+        if (colorScheme === 'auto') {
+            const textColor = $('body, .site-content, main').first().css('color');
+            const computedStyles = {
+                textColor: textColor || 'inherit',
+                linkColor: $('a').first().css('color') || '#0073aa',
+                borderColor: rgba2hex(adjustBrightness(textColor, -0.5)) || '#ddd'
+            };
+            
+            container.css({
+                '--srs-text-color': computedStyles.textColor,
+                '--srs-link-color': computedStyles.linkColor,
+                '--srs-border-color': computedStyles.borderColor,
+                '--srs-border-light-color': adjustOpacity(computedStyles.borderColor, 0.5)
+            });
+        }
     }
     
     // 颜色工具函数
