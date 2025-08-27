@@ -16,24 +16,12 @@
     color: inherit;
 }
 
-/* 深色主题适配 - 只在自动模式且未检测到主题时生效 */
+/* 深色主题适配 */
 @media (prefers-color-scheme: dark) {
-    .srs-container:not(.theme-adaptive):not(.srs-force-light):not(.srs-force-dark) {
+    .srs-container:not(.theme-adaptive) {
         background: #1a1a1a;
         color: #e0e0e0;
     }
-}
-
-/* 强制浅色模式 */
-.srs-container.srs-force-light {
-    background: #ffffff !important;
-    color: #333333 !important;
-}
-
-/* 强制深色模式 */
-.srs-container.srs-force-dark {
-    background: #1a1a1a !important;
-    color: #e0e0e0 !important;
 }
 
 /* 标题样式 - 自适应主题颜色 */
@@ -412,9 +400,9 @@
     --srs-active-bg: rgba(0,123,255,0.1);
 }
 
-/* 深色主题变量覆盖 - 只在自动模式且未检测到主题时生效 */
+/* 深色主题变量覆盖 */
 @media (prefers-color-scheme: dark) {
-    .srs-container:not(.theme-adaptive):not(.srs-force-light):not(.srs-force-dark) {
+    .srs-container:not(.theme-adaptive) {
         --srs-text-color: #e0e0e0;
         --srs-bg-color: #1a1a1a;
         --srs-border-color: #444;
@@ -424,30 +412,6 @@
         --srs-hover-bg: rgba(255,255,255,0.1);
         --srs-active-bg: rgba(79,195,247,0.2);
     }
-}
-
-/* 强制浅色模式的变量 */
-.srs-container.srs-force-light {
-    --srs-text-color: #333333 !important;
-    --srs-bg-color: #ffffff !important;
-    --srs-border-color: #ddd !important;
-    --srs-border-light-color: #eee !important;
-    --srs-link-color: #0073aa !important;
-    --srs-inactive-color: #999 !important;
-    --srs-hover-bg: rgba(0,0,0,0.05) !important;
-    --srs-active-bg: rgba(0,123,255,0.1) !important;
-}
-
-/* 强制深色模式的变量 */
-.srs-container.srs-force-dark {
-    --srs-text-color: #e0e0e0 !important;
-    --srs-bg-color: #1a1a1a !important;
-    --srs-border-color: #444 !important;
-    --srs-border-light-color: #333 !important;
-    --srs-link-color: #4fc3f7 !important;
-    --srs-inactive-color: #666 !important;
-    --srs-hover-bg: rgba(255,255,255,0.1) !important;
-    --srs-active-bg: rgba(79,195,247,0.2) !important;
 }
 
 /* 清理装饰性元素但保持主题适应性 */

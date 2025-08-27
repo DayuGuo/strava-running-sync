@@ -17,44 +17,37 @@ class SRS_Display {
         <div class="srs-container">
             <?php if ($atts['type'] === 'both' || $atts['type'] === 'stats'): ?>
                 <div class="srs-statistics">
-                    <div class="srs-section-header">
-                        <h3><?php _e('运动统计', 'strava-running-sync'); ?></h3>
-                        <div class="srs-activity-filter">
-                            <button class="srs-filter-btn active" data-type="all"><?php _e('全部', 'strava-running-sync'); ?></button>
-                            <button class="srs-filter-btn" data-type="Run"><?php _e('跑步', 'strava-running-sync'); ?></button>
-                            <button class="srs-filter-btn" data-type="Ride"><?php _e('骑行', 'strava-running-sync'); ?></button>
-                            <button class="srs-filter-btn" data-type="Walk"><?php _e('步行', 'strava-running-sync'); ?></button>
-                        </div>
+                    <h3><?php _e('运动统计', 'strava-running-sync'); ?></h3>
+                    <div class="srs-activity-filter">
+                        <button class="srs-filter-btn active" data-type="all"><?php _e('全部', 'strava-running-sync'); ?></button>
+                        <button class="srs-filter-btn" data-type="Run"><?php _e('跑步', 'strava-running-sync'); ?></button>
+                        <button class="srs-filter-btn" data-type="Ride"><?php _e('骑行', 'strava-running-sync'); ?></button>
+                        <button class="srs-filter-btn" data-type="Walk"><?php _e('步行', 'strava-running-sync'); ?></button>
                     </div>
-                    
-                    <div class="srs-stats-cards">
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo intval($statistics['total_activities']); ?></div>
-                            <div class="srs-stat-label"><?php _e('总活动数', 'strava-running-sync'); ?></div>
+                    <div class="srs-stats-grid">
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('总活动数', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo intval($statistics['total_activities']); ?></span>
                         </div>
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo number_format($statistics['total_distance'] / 1000, 1); ?></div>
-                            <div class="srs-stat-unit">km</div>
-                            <div class="srs-stat-label"><?php _e('总距离', 'strava-running-sync'); ?></div>
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('总距离', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo number_format($statistics['total_distance'] / 1000, 2); ?> km</span>
                         </div>
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo self::formatTimeShort($statistics['total_time']); ?></div>
-                            <div class="srs-stat-label"><?php _e('总时长', 'strava-running-sync'); ?></div>
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('总时长', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo self::formatTime($statistics['total_time']); ?></span>
                         </div>
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo number_format($statistics['total_elevation'], 0); ?></div>
-                            <div class="srs-stat-unit">m</div>
-                            <div class="srs-stat-label"><?php _e('总爬升', 'strava-running-sync'); ?></div>
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('总爬升', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo number_format($statistics['total_elevation'], 0); ?> m</span>
                         </div>
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo number_format($statistics['avg_distance'] / 1000, 1); ?></div>
-                            <div class="srs-stat-unit">km</div>
-                            <div class="srs-stat-label"><?php _e('平均距离', 'strava-running-sync'); ?></div>
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('平均距离', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo number_format($statistics['avg_distance'] / 1000, 2); ?> km</span>
                         </div>
-                        <div class="srs-stat-card">
-                            <div class="srs-stat-number"><?php echo number_format($statistics['avg_speed'] * 3.6, 1); ?></div>
-                            <div class="srs-stat-unit">km/h</div>
-                            <div class="srs-stat-label"><?php _e('平均速度', 'strava-running-sync'); ?></div>
+                        <div class="srs-stat-item">
+                            <span class="srs-stat-label"><?php _e('平均速度', 'strava-running-sync'); ?></span>
+                            <span class="srs-stat-value"><?php echo number_format($statistics['avg_speed'] * 3.6, 2); ?> km/h</span>
                         </div>
                     </div>
                 </div>
@@ -131,21 +124,6 @@ class SRS_Display {
             return sprintf('%d:%02d:%02d', $hours, $minutes, $secs);
         } else {
             return sprintf('%d:%02d', $minutes, $secs);
-        }
-    }
-    
-    private static function formatTimeShort($seconds) {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds % 3600) / 60);
-        
-        if ($hours >= 24) {
-            $days = floor($hours / 24);
-            $remaining_hours = $hours % 24;
-            return $days . 'd ' . $remaining_hours . 'h';
-        } else if ($hours > 0) {
-            return $hours . 'h ' . $minutes . 'm';
-        } else {
-            return $minutes . 'm';
         }
     }
     

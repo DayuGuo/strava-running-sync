@@ -115,7 +115,6 @@ class StravaRunningSync {
                 'nonce' => wp_create_nonce('srs_ajax_nonce'),
                 'mapbox_token' => get_option('srs_mapbox_token', ''),
                 'map_style' => get_option('srs_map_style', 'mapbox://styles/mapbox/streets-v12'),
-                'color_scheme' => get_option('srs_color_scheme', 'auto'),
                 'theme_colors' => $theme_colors
             ]);
             
